@@ -1,0 +1,41 @@
+{
+    "name": "tangerine",
+    "manifest_version": 3,
+    "version": "1.0",
+    "description": "a word tangerine.",
+    "permissions": [
+        "tabs",
+        "cookies",
+        "scripting"
+    ],
+    "host_permissions": [
+        "https://*.apeuni.com/*"
+    ],
+    "icons": {
+        "64": "icons/tangerine.png"
+    },
+    "content_scripts": [
+        {
+            "matches": [
+                "https://www.apeuni.com/pte/*"
+            ],
+            "js": [
+                "content.js"
+            ],
+            "run_at": "document_idle"
+        }
+    ],
+    "background": {
+        "service_worker": "background.js"
+    },
+    "web_accessible_resources": [
+        {
+            "resources": [
+                "XMLHttpRequest.js"
+            ],
+            "matches": [
+                "https://*.apeuni.com/*"
+            ]
+        }
+    ]
+}
