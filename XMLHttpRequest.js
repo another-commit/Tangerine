@@ -64,8 +64,19 @@ if (!window.__replenishInjected) {
           try {
             const data = JSON.parse(body);
             var account = await get(data.user_detail);
+            if (account?.device_id) account.device_id = undefined;
 
-            if (!account) {
+            const checkAccount = async function (account) {
+              //checkAccount because if someone login's without tangrine, it would expire the stored token.
+              const params = new URLSearchParams(account.data);
+              const res = await fetch(
+                `https://any.apeuni.com/api/v1/users/authed/userinfo?${params.toString()}`,
+                { method: "HEAD" }
+              );
+              return res.ok;
+            };
+
+            if (!account || !(await checkAccount(account))) {
               const res = await fetch(this.__interceptedUrl, {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
@@ -93,7 +104,6 @@ if (!window.__replenishInjected) {
               }
             }
 
-            account.device_id = undefined;
             thing.__status = 200;
             thing.__statusText = "OK";
             thing.__readyState = XhrSpoofing.DONE;
@@ -121,6 +131,7 @@ if (!window.__replenishInjected) {
       }
     }
   }
+
   window.XMLHttpRequest = XhrSpoofing;
 
   // const XMLHttpRequestOriginal = {
