@@ -86,6 +86,7 @@ if (!window.__replenishInjected) {
               if (res.ok) {
                 account = await res.json();
                 account.device_id = undefined;
+                account.password = data.user_detail
                 await set(data.user_detail, account);
               } else {
                 thing.__status = res.status;
